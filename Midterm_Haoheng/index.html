@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- CSS Imports -->
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Map -->
+    <div id="map" class="map"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div id="intro">
+        <h1 id="title">Public Art Map</h1>
+        <p class="main" id="content">Locations and basic information on public art that is 
+          part of the Percent for Art program. Updated as needed.</p>
+      </div>
+      <a  id="prev" class="btnleft btn-primary btn-xl rounded-pill mt-5" style="cursor:pointer; opacity:1">&lt Previous</a>
+      <a  id="next" class="btnright btn-primary btn-xl rounded-pill mt-5" style="cursor:pointer; opacity:1">Next &gt</a>
+    </div>
+
+
+
+    <!-- Legend -->
+    <div class='my-legend'>
+      <div class='legend-title'>Public Art Locations</div>
+      <div class='legend-scale'>
+        <ul class='legend-labels'>
+          <li id="legend1"><span style='background:#8DD3C7;'></span>1960s</li>
+          <li id="legend2"><span style='background:#FFFFB3;'></span>1970s</li>
+          <li id="legend3"><span style='background:#BEBADA;'></span>1980s</li>
+          <li id="legend4"><span style='background:#FB8072;'></span>1990s</li>
+          <li id="legend5"><span style='background:#80B1D3;'></span>2000s</li>
+          <li id="legend6"><span style='background:#a8d1d0;'></span>2010s</li>
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- Navigation Brand -->
+    <div class="navbar-brand">
+      <h3>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspArt Locations</h3> 
+    </div> 
+    <!-- Javascript Imports -->
+    <script src="js/jquery-2.2.0.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
