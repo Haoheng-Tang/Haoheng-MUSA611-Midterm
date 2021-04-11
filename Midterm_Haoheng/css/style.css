@@ -52,7 +52,7 @@ p.main {
   bottom: 0px;
   background-color: #fff;
   z-index: 2000;
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 
@@ -149,7 +149,7 @@ p.main {
   width: 30px;
   margin-right: 5px;
   margin-left: 0;
-  border: 1px solid #999;
+  border: 1px solid rgba(153, 153, 153, 0);
   }
 .my-legend .legend-source {
   font-size: 70%;

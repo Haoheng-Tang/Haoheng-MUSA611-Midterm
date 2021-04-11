@@ -20,21 +20,25 @@ var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{
 }).addTo(map);
 
 var featureGroup=[]
+var artistGroup=[]
 
-var eachFeatureFunction = function(layer) {
-  console.log(layer)
-  layer.on('click', function (event) {
-    /* =====================
-    The following code will run every time a layer on the map is clicked.
-    Check out layer.feature to see some useful data about the layer that
-    you can use in your application.
-    ===================== */
-    console.log(layer.feature);
-    showResults();
-    map.fitBounds(event.target.getBounds())
-    console.log(event.target.getBounds())
+var myIcon1 = L.divIcon({className: 'my-div-icon1'});
+var myIcon2 = L.divIcon({className: 'my-div-icon2'});
+var myIcon3 = L.divIcon({className: 'my-div-icon3'});
+var myIcon4 = L.divIcon({className: 'my-div-icon4'});
+var myIcon5 = L.divIcon({className: 'my-div-icon5'});
+var myIcon6 = L.divIcon({className: 'my-div-icon6'});
+
+var tearDown = function(){
+  //remove all plotted data in prep for building the page with new filters, etc.
+  featureGroup.map(function(marker){
+    map = map.removeLayer(marker)
+    featureGroup=[]
+    artistGroup=[]
   });
-};
+ 
+
+}
 
 
 /* =====================
@@ -43,59 +47,60 @@ Build pages
 var data
 var markers
 var page1 = {
-  title: "page1",
-  content: "all data, overview and introductions",
-  bbox:[[37.82344475985, -75.3742359375], [40.130591021795, -74.88830540625]],
+  title: "Public Art from 1960 to 2020",
+  bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 0,
-  endYear: 1000000
+  endYear: 1000000,
+  popup: true
 }
 
 var page2 = {
-  title: "page2",
-  content: "1960s 1970s",
-  bbox:[[38.827522475985, -75.374450959375], [40.13059109801795, -74.888640625]],
+  title: "Public Art in 1960s & 1970s",
+  bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 1960,
-  endYear: 1979
+  endYear: 1979,
+  popup: true
 }
 
 var page3 = {
-  title: "page3",
-  content: "1980s 1990s",
-  bbox:[[39.8275075985, -75.37445268359375], [40.1300063801795, -74.88830140625]],
+  title: "Public Art in 1980s & 1990s",
+  bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 1980,
-  endYear: 1999
+  endYear: 1999,
+  popup: true
 }
 
 var page4 = {
-  title: "page4",
+  title: "Public Art in 2000s & 2010s",
   content: "2000s 2010s",
-  bbox:[[38.82752248475985, -75.37445068359375], [40.1305910111795, -74.88834640625]],
+  bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 2000,
-  endYear: 2019
+  endYear: 2019,
+  popup: true
 }
 
 var page5 = {
-  title: "page5",
-  content: "Northeast",
-  bbox:[[37.827522454985, -75.37445068359375], [42.1305913801795, -75.88831625]],
+  title: "Public Art in the Northeast",
+  bbox:[[39.99290359080194, -75.19824987792967], [39.92395554100352, -75.09860452270508]],
   startYear: 0,
-  endYear: 1000000
+  endYear: 1000000,
+  popup: false
 }
 
 var page6 = {
-  title: "page6",
-  content: "Northwest",
-  bbox:[[36.352244075985, -76.37445068359375], [40.130591063801795, -75.8883056640625]],
+  title: "Public Art in the Northwest",
+  bbox:[[39.99290359080194, -75.25824987792967], [39.92395554100352, -75.15860452270508]],
   startYear: 0,
-  endYear: 1000000
+  endYear: 1000000,
+  popup: false
 }
 
 var page7 = {
-  title: "page7",
-  content: "Southwest",
-  bbox:[[28.82752244475985, -75.644506159375], [40.130591063801795, -75.8883056640625]],
+  title: "Public Art in the Southwest",
+  bbox:[[39.949747745342944, -75.27252746582031], [39.88442543413277, -75.14755798339844]],
   startYear: 0,
-  endYear: 1000000
+  endYear: 1000000,
+  popup: false
 }
 
 
@@ -113,7 +118,6 @@ var currentPage = -1
 
 var nextPage = function(){
   //event handling for proceeding forward in slideshow
-  tearDown()
   var nextPage = currentPage +1
   currentPage = nextPage
   buildPage(slides[nextPage])
@@ -121,7 +125,6 @@ var nextPage = function(){
 
 var prevPage = function(){
   //event handling for going backward in slideshow
-  tearDown()
   var prevPage = currentPage -1
   currentPage = prevPage
   buildPage(slides[prevPage])
@@ -129,18 +132,16 @@ var prevPage = function(){
 
 var buildPage = function(pageDefinition){
   //build up a "slide" given a page definition
-
-  //var locations = parsedData.rows
-  //markers = locations.map(function(location){
-  //  return L.geoJson(location.the_geom_geojson,{
-  //    style: myStyle
-  //  })
-  //})
-
-  //markers.forEach(function(marker){marker.addTo(map)})
+  //console.log(featureGroup)
   tearDown()
+  //console.log(featureGroup)
+  //featureGroup.map(function(m){
+  //  map.removeLayer(m)
+  //});
+
 
   map.fitBounds(pageDefinition.bbox)
+  console.log(pageDefinition.bbox)
   console.log(currentPage)
 
   var filtered = _.filter(data,function(row){
@@ -148,30 +149,81 @@ var buildPage = function(pageDefinition){
   })
 
   console.log(filtered)
-  var pageFeature
+
+  console.log(featureGroup)
 
   //filter data
+  //for (var i = 0; i < filtered.length - 1; i++){
+  //  pageFeature = L.geoJson(filtered[i]["the_geom_geojson"], {
+  //    style: myStyle
+  //  }).addTo(map).bindPopup(filtered[i]["artist"]).openPopup()
+  // }
+
   for (var i = 0; i < filtered.length - 1; i++){
-    pageFeature = L.geoJson(filtered[i]["the_geom_geojson"], {
-      style: myStyle
-    }).addTo(map).bindPopup(filtered[i]["artist"]).openPopup()
+    //To see if there are multiple polygons in a row.
+    //console.log(filtered[i]["the_geom_geojson"]["coordinates"][0][0][0].length==undefined)
+    if(filtered[i]["the_geom_geojson"]["coordinates"][0][0][0].length==undefined){
+      var lng = filtered[i]["the_geom_geojson"]["coordinates"][0][0][0]
+      var lat = filtered[i]["the_geom_geojson"]["coordinates"][0][0][1]
+    }else{
+      var lng = filtered[i]["the_geom_geojson"]["coordinates"][0][0][0][0]
+      var lat = filtered[i]["the_geom_geojson"]["coordinates"][0][0][0][1]
+    }
+
+    //feature = L.marker([lat, lng],{icon: myIcon1})
+    if(filtered[i]["date_"] >= 1960 && filtered[i]["date_"] < 1970){
+      feature = L.marker([lat, lng],{icon: myIcon1})
+    }
+    else if(filtered[i]["date_"] >= 1970 && filtered[i]["date_"] < 1980){
+      feature = L.marker([lat, lng],{icon: myIcon2})
+    }
+    else if(filtered[i]["date_"] >= 1980 && filtered[i]["date_"] < 1990){
+      feature = L.marker([lat, lng],{icon: myIcon3})
+    }
+    else if(filtered[i]["date_"] >= 1990 && filtered[i]["date_"] < 2000){
+      feature = L.marker([lat, lng],{icon: myIcon4})
+    }
+    else if(filtered[i]["date_"] >= 2000 && filtered[i]["date_"] < 2010){
+      feature = L.marker([lat, lng],{icon: myIcon5})
+    }
+    else{
+      feature = L.marker([lat, lng],{icon: myIcon6})
    }
+
+    featureGroup.push(feature)
+
+    artist = filtered[i]["artist"]
+    artistGroup.push(artist)
+   }
+
+  //Avoid openPopup() affecting the bounds!
+  len = filtered.length
+
+  if (pageDefinition.popup == true){
+    for (var i = 0; i < len - 1; i++){
+     featureGroup[i].addTo(map).bindPopup(artistGroup[i]).openPopup()
+    }
+  }else{
+    for (var i = 0; i < len - 1; i++){
+      featureGroup[i].addTo(map).bindPopup(artistGroup[i])
+     }
+  }
+  
+
+  $('.my-div-icon1').css({backgroundColor:"#f7523c", borderRadius: "80%", opacity:"60%"})
+  $('.my-div-icon2').css({backgroundColor:"#5D4253", borderRadius: "80%", opacity:"60%"})
+  $('.my-div-icon3').css({backgroundColor:"#E08CB0", borderRadius: "80%", opacity:"60%"})
+  $('.my-div-icon4').css({backgroundColor:"#F7DBB3", borderRadius: "80%", opacity:"60%"})
+  $('.my-div-icon5').css({backgroundColor:"#CD9457", borderRadius: "80%", opacity:"60%"})
+  $('.my-div-icon6').css({backgroundColor:"#C7D5BD", borderRadius: "80%", opacity:"90%"})
+
 
   //modify text
   $('#title').text(pageDefinition.title)
-  $('#content').text(pageDefinition.content)
   
-  //modify legend
-  leid1 = "#legend1"
-
-
-  var dele1 = $(leid1).html();
-  $(leid1).replaceWith(dele1);
-
+  $('#content').text("There are ".concat(len.toString()," art installations built within this period. Click on the marker to see whose work it is."))
 
   
-
-
   if(currentPage === 0){
     $('#prev').hide()
   }else{
@@ -186,15 +238,6 @@ var buildPage = function(pageDefinition){
     $('#next').prop("disabled", false)
   }
 }
-
-var tearDown = function(){
-  //remove all plotted data in prep for building the page with new filters, etc.
-  map.eachLayer(function (layer) {
-    map.removeLayer(layer);
-});
-return map
-}
-
 
 
 
@@ -242,24 +285,60 @@ Execute here:
 $('#prev').hide()
 $(document).ready(function() {
   $.ajax(dataset).done(function(parsedData) {
-    //var string = JSON.stringify(response);
-    //var parsedData = JSON.parse(response);
-    console.log(parsedData.rows[1]);
     for (var i = 0; i < parsedData.rows.length - 1; i++){
-    feature = L.geoJson(parsedData.rows[i]["the_geom_geojson"], {
-      style: myStyle
-    })
-    featureGroup.push(feature)
+    //To see if there are multiple polygons in a row.
+    //console.log(parsedData.rows[i]["the_geom_geojson"]["coordinates"][0][0][0].length==undefined)
+    if(parsedData.rows[i]["the_geom_geojson"]["coordinates"][0][0][0].length==undefined){
+      var lng = parsedData.rows[i]["the_geom_geojson"]["coordinates"][0][0][0]
+      var lat = parsedData.rows[i]["the_geom_geojson"]["coordinates"][0][0][1]
+    }else{
+      var lng = parsedData.rows[i]["the_geom_geojson"]["coordinates"][0][0][0][0]
+      var lat = parsedData.rows[i]["the_geom_geojson"]["coordinates"][0][0][0][1]
+    }
+
+
+    if(parsedData.rows[i]["date_"] >= 1960 && parsedData.rows[i]["date_"] < 1970){
+      feature = L.marker([lat, lng],{icon: myIcon1})
+      featureGroup.push(feature)
+    }
+    else if(parsedData.rows[i]["date_"] >= 1970 && parsedData.rows[i]["date_"] < 1980){
+      feature = L.marker([lat, lng],{icon: myIcon2})
+      featureGroup.push(feature)
+    }
+    else if(parsedData.rows[i]["date_"] >= 1980 && parsedData.rows[i]["date_"] < 1990){
+      feature = L.marker([lat, lng],{icon: myIcon3})
+      featureGroup.push(feature)
+    }
+    else if(parsedData.rows[i]["date_"] >= 1990 && parsedData.rows[i]["date_"] < 2000){
+      feature = L.marker([lat, lng],{icon: myIcon4})
+      featureGroup.push(feature)
+    }
+    else if(parsedData.rows[i]["date_"] >= 2000 && parsedData.rows[i]["date_"] < 2010){
+      feature = L.marker([lat, lng],{icon: myIcon5})
+      featureGroup.push(feature)
+    }
+    else{
+      feature = L.marker([lat, lng],{icon: myIcon6})
+      featureGroup.push(feature)
    }
+  }
+
    data = parsedData.rows
    
-   featureGroup.forEach(function(polygon){
-     polygon.addTo(map)
+   featureGroup.forEach(function(marker){
+     marker.addTo(map)
    })
+
+   $('.my-div-icon1').css({backgroundColor:"#f7523c", borderRadius: "80%", opacity:"60%"})
+   $('.my-div-icon2').css({backgroundColor:"#5D4253", borderRadius: "80%", opacity:"60%"})
+   $('.my-div-icon3').css({backgroundColor:"#E08CB0", borderRadius: "80%", opacity:"60%"})
+   $('.my-div-icon4').css({backgroundColor:"#F7DBB3", borderRadius: "80%", opacity:"60%"})
+   $('.my-div-icon5').css({backgroundColor:"#CD9457", borderRadius: "80%", opacity:"60%"})
+   $('.my-div-icon6').css({backgroundColor:"#C7D5BD", borderRadius: "80%", opacity:"90%"})
+
 
    console.log(featureGroup)
 
-   //featureGroup.eachLayer(eachFeatureFunction);
    
   });
   $('#next').click(nextPage)
