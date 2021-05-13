@@ -12,6 +12,7 @@ var map = L.map('map', {
 
 
 var Stamen_TonerLite = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+// var Stamen_TonerLite = L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', {
   attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
   subdomains: 'abcd',
   minZoom: 0,
@@ -51,7 +52,10 @@ var page1 = {
   bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 0,
   endYear: 1000000,
-  popup: true
+  popup: true,
+  entryLengend: [{year: "1960", color: "#f7523c"}, {year: "1970", color: "#5D4253"}, 
+  {year: "1980", color: "#E08CB0"}, {year: "1990", color: "#F7DBB3"}, {year: "2000", color: "#CD9457"},
+  {year: "2010", color: "#C7D5BD"}]
 }
 
 var page2 = {
@@ -59,7 +63,8 @@ var page2 = {
   bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 1960,
   endYear: 1979,
-  popup: true
+  popup: true,
+  entryLengend: [{year: "1960", color: "#f7523c"}, {year: "1970", color: "#5D4253"}]
 }
 
 var page3 = {
@@ -67,7 +72,8 @@ var page3 = {
   bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 1980,
   endYear: 1999,
-  popup: true
+  popup: true,
+  entryLengend: [{year: "1980", color: "#E08CB0"}, {year: "1990", color: "#F7DBB3"}]
 }
 
 var page4 = {
@@ -76,7 +82,8 @@ var page4 = {
   bbox:[[40.06604611654875, -75.21446228027344], [39.91184298474967, -75.05756378173828]],
   startYear: 2000,
   endYear: 2019,
-  popup: true
+  popup: true,
+  entryLengend: [ {year: "2000", color: "#CD9457"}, {year: "2010", color: "#C7D5BD"}]
 }
 
 var page5 = {
@@ -84,7 +91,10 @@ var page5 = {
   bbox:[[39.99290359080194, -75.19824987792967], [39.92395554100352, -75.09860452270508]],
   startYear: 0,
   endYear: 1000000,
-  popup: false
+  popup: false,
+  entryLengend: [{year: "1960", color: "#f7523c"}, {year: "1970", color: "#5D4253"}, 
+  {year: "1980", color: "#E08CB0"}, {year: "1990", color: "#F7DBB3"}, {year: "2000", color: "#CD9457"},
+  {year: "2010", color: "#C7D5BD"}]
 }
 
 var page6 = {
@@ -92,7 +102,10 @@ var page6 = {
   bbox:[[39.99290359080194, -75.25824987792967], [39.92395554100352, -75.15860452270508]],
   startYear: 0,
   endYear: 1000000,
-  popup: false
+  popup: false,
+  entryLengend: [{year: "1960", color: "#f7523c"}, {year: "1970", color: "#5D4253"}, 
+  {year: "1980", color: "#E08CB0"}, {year: "1990", color: "#F7DBB3"}, {year: "2000", color: "#CD9457"},
+  {year: "2010", color: "#C7D5BD"}]
 }
 
 var page7 = {
@@ -100,7 +113,10 @@ var page7 = {
   bbox:[[39.949747745342944, -75.27252746582031], [39.88442543413277, -75.14755798339844]],
   startYear: 0,
   endYear: 1000000,
-  popup: false
+  popup: false,
+  entryLengend: [{year: "1960", color: "#f7523c"}, {year: "1970", color: "#5D4253"}, 
+  {year: "1980", color: "#E08CB0"}, {year: "1990", color: "#F7DBB3"}, {year: "2000", color: "#CD9457"},
+  {year: "2010", color: "#C7D5BD"}]
 }
 
 
@@ -237,6 +253,14 @@ var buildPage = function(pageDefinition){
     $('#next').show()
     $('#next').prop("disabled", false)
   }
+
+  //modify legend
+  var newLegend = function (entry){
+    return (`<li ><span style='background:${entry.color};'></span>${entry.year}s</li>`)
+    }
+  entry = pageDefinition.entryLengend
+  $(".legend-labels").html(entry.map(newLegend).join(" "))
+  
 }
 
 
